@@ -1,0 +1,20 @@
+#!/usr/bin/env perl
+
+use lib qw(/var/www/lib);
+use Term::ANSIColor;
+
+for my $module (@ARGV) {
+    my $pm_install_path;
+    eval {
+        my $module_path = $module;
+        $module_path =~ s{::}{/}g;
+        $module_path = $module_path.'.pm';
+        require $module_path;
+        $pm_install_path = $INC{$module_path};
+    };
+    print color($pm_install_path ? 'green' : 'red');
+    print "Module $module is"
+      .($pm_install_path ? " installed at $pm_install_path": ' not installed.')
+      ."\n";
+    print color('reset');
+}
